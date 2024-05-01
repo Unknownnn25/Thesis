@@ -25,6 +25,7 @@ const CombinedComponent = () => {
 
   const webcamRef = useRef(null);
   const lastSpokenOutput = useRef(null);
+  const lastSpokenTime = useRef(0);
 
   useEffect(() => {
     // Initialize Pose Model
@@ -113,10 +114,13 @@ const CombinedComponent = () => {
       spokenOutput = `${spokenOutput ? spokenOutput.split(' ')[0] : ''} is ${poseAction}`;
     }
 
-    // Speak if output changed
-    if (spokenOutput && spokenOutput !== lastSpokenOutput.current) {
+    // Speak if output changed and cooldown period has elapsed
+    const currentTime = Date.now();
+    const cooldownDuration = 5000; // 5 seconds
+    if (spokenOutput && spokenOutput !== lastSpokenOutput.current && currentTime - lastSpokenTime.current >= cooldownDuration) {
       speak(spokenOutput);
       lastSpokenOutput.current = spokenOutput;
+      lastSpokenTime.current = currentTime;
     }
   };
 
@@ -136,10 +140,16 @@ const CombinedComponent = () => {
   };
 
   const ProgressBar = ({ progress }) => (
-    <div className="bg-gray-200 h-2 rounded-lg overflow-hidden w-full">
-      <div className="bg-blue-500 h-full" style={{ width: `${progress * 100}%` }}></div>
+    <div className="bg-gray-200 h-8 rounded-lg overflow-hidden w-full relative">
+      <div className="bg-blue-500 h-full" style={{ width: `${progress * 100}%` }}>
+        <div className="absolute inset-0 flex items-center justify-center text-black">
+          {Math.round(progress * 100)}%
+        </div>
+      </div>
     </div>
   );
+  
+  
   
   return (
     <div>
