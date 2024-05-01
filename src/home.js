@@ -106,6 +106,8 @@ const CombinedComponent = () => {
 
     // Update spoken output
     let spokenOutput = lastSpokenOutput.current;
+    const currentTime = Date.now();
+
     if (imageClass && poseAction) {
       spokenOutput = `${imageClass} is ${poseAction}`;
     } else if (imageClass) {
@@ -115,11 +117,16 @@ const CombinedComponent = () => {
     }
 
     // Speak if output changed and cooldown period has elapsed
-    const currentTime = Date.now();
-    const cooldownDuration = 5000; // 5 seconds
-    if (spokenOutput && spokenOutput !== lastSpokenOutput.current && currentTime - lastSpokenTime.current >= cooldownDuration) {
-      speak(spokenOutput);
-      lastSpokenOutput.current = spokenOutput;
+    const cooldownDuration = 3000; // 5 seconds
+    if (spokenOutput && spokenOutput !== lastSpokenOutput.current) {
+      // Check if the prediction has been above threshold for at least 5 seconds
+      if (currentTime - lastSpokenTime.current >= cooldownDuration) {
+        speak(spokenOutput);
+        lastSpokenOutput.current = spokenOutput;
+        lastSpokenTime.current = currentTime;
+      }
+    } else {
+      // If the prediction falls below the threshold, reset the cooldown time
       lastSpokenTime.current = currentTime;
     }
   };
@@ -148,8 +155,6 @@ const CombinedComponent = () => {
       </div>
     </div>
   );
-  
-  
   
   return (
     <div>

@@ -1,7 +1,7 @@
 import React from "react";
 import RahcImage from "./Dev/Rahc.jpg";
 import PaoImage from "./Dev/Pao.jpg";
-import AidanImage from "./Dev/Rahc.jpg";
+import AidanImage from "./Dev/Aidan.png";
 import CharlesImage from "./Dev/Charles.png";
 
 function Contact() {
@@ -22,9 +22,8 @@ function Contact() {
         <div className="flex justify-end px-4 pt-4">
         </div>
         <div className="flex flex-col items-center pb-10">
-          <img
-            className="w-24 h-24 mb-3 rounded-full shadow-lg"
-            src="/docs/images/people/profile-picture-3.jpg"/>
+        <img
+          className="w-24 h-24 object-cover rounded-full shadow-lg" src={AidanImage} alt="Aidan's Image" />
           <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
             Aidan Delon Del Pilar
           </h5>
