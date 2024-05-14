@@ -4,6 +4,7 @@ import Home from "./home";
 import About from "./about";
 import Contact from "./contacts";
 import Navigate from "./navbar";
+import Object from "./object";
 function App() {
   return (
     <div className="App">
@@ -13,6 +14,7 @@ function App() {
           <Route path="Home" element={<Home />} />
           <Route path="About" element={<About />} />
           <Route path="Contact" element={<Contact />} />
+          <Route path="Object" element={<Object />} />
           </Route>
         </Routes>
       </BrowserRouter>

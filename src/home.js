@@ -1,16 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Outlet, Link } from "react-router-dom";
 import Webcam from 'react-webcam';
 import * as tmPose from '@teachablemachine/pose';
 import * as tmImage from '@teachablemachine/image';
-import Navbar from './navbar'; 
-import About  from './about'; 
-import Contacts  from './contacts'; 
 
 const CombinedComponent = () => {
   // Teachable Machine Pose Model
-  const poseModelURL = 'https://teachablemachine.withgoogle.com/models/-vTgwJKjf/';
+  const poseModelURL = 'https://teachablemachine.withgoogle.com/models/XQ9WsnS_G/';
   // Teachable Machine Face Image Model
-  const imageModelURL = 'https://teachablemachine.withgoogle.com/models/rZz85HzWk/';
+  const imageModelURL = 'https://teachablemachine.withgoogle.com/models/fEN1rKevz/';
 
   // Pose Model States
   const [poseModel, setPoseModel] = useState(null);
@@ -117,7 +115,7 @@ const CombinedComponent = () => {
     }
 
     // Speak if output changed and cooldown period has elapsed
-    const cooldownDuration = 3000; // 5 seconds
+    const cooldownDuration = 2000; // 5 seconds
     if (spokenOutput && spokenOutput !== lastSpokenOutput.current) {
       // Check if the prediction has been above threshold for at least 5 seconds
       if (currentTime - lastSpokenTime.current >= cooldownDuration) {
@@ -158,44 +156,47 @@ const CombinedComponent = () => {
   
   return (
     <div>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="mb-4">
-          <Webcam
-            ref={webcamRef}
-            muted={true}
-            className="w-full h-auto"
-          />
-        </div>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="mb-4">
+        <Webcam
+          ref={webcamRef}
+          muted={true}
+          className="w-full h-auto"
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center" style={{ marginTop: '-60px' }}>
         <div><canvas ref={poseCanvasRef} width={100} height={100}></canvas></div>
-        <div className="grid grid-cols-2 gap-4"> {/* Use a grid with two columns */}
-          <div className="relative">
-            <div className="mb-2">Human Action Recognition</div>
-            
-            <div id='pose-predictions' className="mt-1">
-              {posePredictions.map((prediction, index) => (
-                <div key={index} className="flex items-center mb-2"> {/* Align items center */}
-                  <div className="w-24">{prediction.className}:</div> {/* Fixed width for label */}
-                  <ProgressBar progress={prediction.probability} />
-                </div>
-              ))}
-            </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 mb-10">
+        <div className="relative">
+          <div className="mb-2">Action Detected</div>
+          <div id='pose-predictions' className="mt-1">
+            {posePredictions.map((prediction, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <div className="w-24">{prediction.className}:</div>
+                <ProgressBar progress={prediction.probability} />
+              </div>
+            ))}
           </div>
-    
-          <div className="relative">
-            <div className="mb-2">Image Classification</div> {/* Add a heading for image predictions */}
-            <div id="image-label-container">
-              {imagePredictions.map((prediction, index) => (
-                <div key={index} className="flex items-center mb-2"> {/* Align items center */}
-                  <div className="w-24">{prediction.className}:</div> {/* Fixed width for label */}
-                  <ProgressBar progress={prediction.probability} />
-                </div>
-              ))}
-            </div>
+        </div>
+        <div className="relative">
+          <div className="mb-2">Face Detected</div>
+          <div id="image-label-container">
+            {imagePredictions.map((prediction, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <div className="w-24">{prediction.className}:</div>
+                <ProgressBar progress={prediction.probability} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
-      
+      <div className="flex flex-col items-center justify-center">
+        <Link to="/object" className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2">Object Detection</Link>
+      </div>
     </div>
+  </div>
   );
 };
 
